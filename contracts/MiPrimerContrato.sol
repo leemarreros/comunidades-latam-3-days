@@ -1,16 +1,29 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.18;
 
+// TAMAÑO LÍMITE DEL CONTRATO ES 24KB
 contract MiPrimerContrato {
-    // storage - almacenamiento eterno
-    string saludo;
+    // storage (memoria permanente)
+    string saludo = "Hola";
 
     // métodos
-    function set(string memory _nuevoSaludo) public {
-        saludo = _nuevoSaludo; // no se necesita 'this'
+    // setters (modificar o escribir información) y getter (leer información)
+    // JAVA: public, private, final
+    //
+    // Visibilidad del método en SOLIDITY:
+    // - public: el método puede ser usado o llamado por un usuario externo
+    // - private: el método solo será usado dentro del contrato y no por un usuario externo
+    // - internal
+    // - external
+    // - view: indica que el método es solo lectura
+    // Este es un método setter. Método de escritura
+    function cambiarSaludo(string memory nuevoSaludo) public {
+        saludo = nuevoSaludo;
     }
 
-    function get() public view returns (string memory) {
+    // Vamos a crear un método getter o de lectura
+    // Como es un método de lectura, le corresponde la visibilidad de 'view'
+    function leerSaludo() public view returns (string memory) {
         return saludo;
     }
 }
