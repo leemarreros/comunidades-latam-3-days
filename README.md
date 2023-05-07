@@ -256,3 +256,159 @@ Además de la creación de la clase (Class - ES6) que lleve los mismo métodos, 
 Cuando se trata de desarrollar para el Blockchain, tan solo desarrollamos el código del smart contract. El resto de características (inmutabilidad, descentralización, código público, etc.) es otorgado por el Blockchain.
 
 Usando Smart Contracts, el "servidor" y la "base de datos" están dados por la Máquina Virtual de Ethereum (EVM). Las lecturas y escrituras a raíz de la ejecución del código, se hace desde y sobre el blockchain.
+
+## Verificación de un Smart Contract
+
+A través de la verificación de un smart contract en el Escaner se puede hacer público el código del mismo. Adicional a ello, el Escaner provee una interface para poder interactuar con los métodos del smart contract. Sigue los siguienes pasos para verificar un smart contract.
+
+1. Para verificar, hacer click en la dirección del contrato creado en el anterior paso. O en su defecto, ir al siguiente link [`https://mumbai.polygonscan.com/address/0x0a5e44c07b189662269cd715d5a65ba4075a3ef3`](https://mumbai.polygonscan.com/address/0x0a5e44c07b189662269cd715d5a65ba4075a3ef3), del cual la última parte será reemplazada por la dirección (address) de tu contrato.
+
+![image-20230422090903615](/Users/steveleec/Documents/Blockchain Bites/comunidades-latam-3-days/README.assets/image-20230422090903615.png)
+
+2. Hacer click en la pestaña `Contract` que te permitirá ver el bytecode generado del Smart Contract. Para verificar, hacer clic en `Verify and Publish`.
+
+![image-20221002072149755](https://user-images.githubusercontent.com/3300958/193496987-b6646c29-213c-470d-a925-2fe2a33a7a07.png)
+
+3. Se abrirá una lista de opciones que tienen que ser llenadas de la siguiente manera: address del smart contract, Single File, versión del compilador (debe ser la misma usada en Remix), MIT de licencia.
+
+![image-20230422091056138](/Users/steveleec/Documents/Blockchain Bites/comunidades-latam-3-days/README.assets/image-20230422091056138.png)
+
+4. En esta ventana copias y pegas el código de Remix. Verificas el CAPTCHA. Luego clic en `Verify and Publish`.
+
+![image-20221002074129280](https://user-images.githubusercontent.com/3300958/193496578-46b72f49-0855-4915-acfb-67d2c78d3832.png)
+
+4. Si todos los valores fueron incluidos correctamente, se verá el siguiente resultado:
+
+![image-20230422091256124](/Users/steveleec/Documents/Blockchain Bites/comunidades-latam-3-days/README.assets/image-20230422091256124.png)
+
+6. Al dirigirte a tu contrato en `mumbai.polygonscan.com` con el siguiente link [`https://mumbai.polygonscan.com/address/0x0a5e44c07b189662269cd715d5a65ba4075a3ef3`](https://mumbai.polygonscan.com/address/0x0a5e44c07b189662269cd715d5a65ba4075a3ef3#code), del cual la última parte será reemplazada por la dirección (address) de tu contrato, podrás (1) encontrar el código del Smart Contract, (2) interactuar con el contrato directamente (`Read Contract` y `Write Contract`) y (3) observar otros detalles del mismo.
+
+   ![image-20230422091538911](/Users/steveleec/Documents/Blockchain Bites/comunidades-latam-3-days/README.assets/image-20230422091538911.png)
+
+   - `Read Contract`: te permite interactuar con los métodos de sólo lectura del smart contract
+   - `Write Contract`: utilizar cualquier método de esta pestaña requiere dicha transacción sea firmada con la billetera. El resultado de usar estos métodos es que cambiarán el estado del blockchain
+
+## Hash table en contratos inteligentes
+
+### Es como un diccionario
+
+Podemos imaginar que mapping es como un diccionario. Cada vez que quieres saber la definición de una palabra lo buscas en la lista y al encontrarla, obtienes el significado de dicha palabra. Mapping en Solidity es una lista que conecta dos valores: una llave y el valor (de dicha llave). En el caso del diccionario, se conecta la palabra con su significado. Por lo tanto, la palabra sería la llave y el significado sería el valor asociado a esa llave.
+
+Entonces podemos decir que mapping en Solidity es una estructura de datos que guarda la información en base a llaves y valores. Tanto las llaves como los valores asociados a esas llaves pueden ser de diferentes tipos de datos con pequeñas limitaciones.
+
+### Mapping en javascript
+
+En `javascript` podemos crear un `mapping` de la siguiente manera:
+
+```javascript
+var diccionario = {};
+diccionario["computadora"] = "Máquina electrónica";
+```
+
+Al hacer esto, hemos asociado la llave `computadora` con el valor de `Máquina electrónica`. Cuando queremos solicitar el valor de esta llave, realizamos lo siguiente:
+
+```javascript
+console.log(diccionario["computadora"]); // Máquina electrónica
+```
+
+Es decir, accedemos al valor asociada a dicha llave pasando la llave al `mapping`.
+
+### Mapping en Solidity
+
+Sin embargo, en Solidity debemos definir los tipos de datos a usar dentro del `mapping`. Dado que para este ejemplo estamos usando un tipo de dato `string` para la llave y un tipo de dato `string` para el valor asociado a esa llave, hacemos lo siguiente. Veamos:
+
+```solidity
+mapping(string => string) diccionario;
+diccionario["computadora"] = "Máquina electrónica";
+```
+
+El tipo de datgo `mapping` en solidity es una de las estructuras de datos más usados en Solidity. Podemos definirlo de manera genérica del siguiente modo:
+
+```
+mapping(KeyType => ValueType) mappingName;
+```
+
+Los tipos de data para llave y su valor asociado son definidos de antemano.
+
+### Tipos de datos para llave y su valor
+
+Veamos la lista de tipos de dato tanto para las llaves como para los valores asociados a cada llave:
+
+| Types                     | Key Type | Value Type |
+| ------------------------- | -------- | ---------- |
+| boolean (bool)            | ✅       | ✅         |
+| integer (uint256)         | ✅       | ✅         |
+| unsigned integer (int256) | ✅       | ✅         |
+| address                   | ✅       | ✅         |
+| string                    | ✅       | ✅         |
+| enum                      | ✅       | ✅         |
+| bytes                     | ✅       | ✅         |
+| Contract                  | ✅       | ✅         |
+| mapping                   | ❌       | ✅         |
+| struct                    | ❌       | ✅         |
+| array types               | ❌       | ✅         |
+
+El tipo de dato para las llaves son más limitadas. Sin embargo, para el valor de las llaves puede tomar cualquier tipo de datos.
+
+### Es parte del storage
+
+Los `mapping` solo pueden tener la ubicación de `storage` dentro de la estructura de un contrato inteligente. No pueden ser usados como argumentos o valores de retorno de funciones públicas.
+
+### Getter automático
+
+En la definición de un `mapping` se puede incluir un modificador de su visibilidad de la siguiente manera:
+
+```solidity
+mapping(string => string) public diccionario;
+```
+
+Al incluir el visibilizador de `public`, Solidity crea automáticamente un método para obtener información del `mapping`. Es decir, Solidity creará un `getter`. El argumento de este método `getter` será la llave del mapping y el valor de retorno será el valor asociado a dicha llave.
+
+### Nombre de llave y nombre del valor
+
+De manera opcional, se puede incluir en la definición de un `mapping` los nombres para la llave y su valor de la siguiente manera:
+
+```solidity
+mapping(string palabra => string definicion) diccionario;
+```
+
+Esto agrega mayor experiencia de usuario para el usuario porque puede entender con mayor claridad de qué trata la llave y su valor asociado.
+
+### Inicialización de un `mapping`
+
+Cuando un `mapping` se define, automáticamente todos los valores asociados a cada una de las llaves del `mapping` también se inicializan a un valor por defecto (definido por Solidity). El valor de inicialización dependerá del tipo de dato usado. Veamos unos ejemplos:
+
+```solidity
+// mapping que va de un entero a un entero
+mapping(uint256 => uint256) integerToInteger;
+
+// solicitemos valores
+integerToInteger[123]; // 0
+integerToInteger[456]; // 0
+
+// mapping que va de un string a un bool
+mapping(string => uint256) stringToInteger;
+
+// solicitemos valores
+stringToInteger["cualquier valor"]; // ""
+stringToInteger["otro valor"]; // ""
+```
+
+La inicialización automática en Solidity deviene en que no existe la posibilidad de encontrar valores sin definir del tipo `undefined` como sí lo hay en otros lenguajes de programación.
+
+### Longitud e iteración de un `mapping`
+
+No se puede iterar sobre un `mapping`. Ello porque por defecto todo el mapping se inicializa y no se lleva la cuenta de aquellos valores que ya se guardaron y cuales no. Dado que no se puede sabar qué llaves se actualizaron, tampoco podemos saber la longitud de un `mapping`.
+
+Se puede crear otra estructura de datos adicional al `mapping` para llevar la cuenta de las llaves que se están inicializando. Típicamente esta estructura de dato es un array.
+
+Para eliminar la información de un `mapping` necesariamente se tiene que saber la llave que se busca limpiar. Lo hacemos de la siguiente manera:
+
+```solidity
+mapping(uint256 => uint256) integerToInteger;
+mapping[123] = 123;
+delete mapping[123];
+mapping[123]; // 0
+```
+
+Con `delete` borramos la llave y el valor asociado a dicha llave. La siguiente vez que se consulta dicha llave se encontrará su valor de inicialización por defecto.
